@@ -1,0 +1,109 @@
+﻿@{
+    var TextNothingFound = "Nothing Found...";
+    var TextTryOtherThing = "Try another thing?";
+    var TextRuleNotFound = "Rule of this genre/module not found!";
+}
+
+@model List<CardModel>;
+@{
+    bool isGenre = string.IsNullOrEmpty(ViewBag.Module);
+    ViewBag.Title = isGenre ? ViewBag.Genre : ViewBag.Module;
+    ViewBag.Full = 0;
+}
+
+<h1>@ViewBag.Title</h1>
+
+<hr />
+
+@{
+    string rule;
+    try
+    {
+        rule = Genres.Rules[ViewBag.Title];
+    }
+    catch (Exception)
+    {
+        rule = TextRuleNotFound;
+    }
+    <h4>@rule</h4>
+    <hr />
+}
+
+@{
+    if (ViewBag.Page == 0)
+    {
+        <p>
+            <b>
+                @TextNothingFound
+            </b>
+        </p>
+        <p>
+            @TextTryOtherThing
+        </p>
+    }
+}
+
+@{
+    foreach (var card in Model)
+    {
+        @await Html.PartialAsync("_Card", card);
+        <br />
+    }
+}
+
+@{
+    string PrevClass = ViewBag.Page == 1 || ViewBag.Page == 0 ? "page-item disabled" : "page-item";
+    string NextClass = ViewBag.Page >= ViewBag.MaxPage ? "page-item disabled" : "page-item";
+    int PrevPage = ViewBag.Page - 1 <= 0 ? 1 : ViewBag.Page - 1;
+    int NextPage = ViewBag.Page + 1 > ViewBag.MaxPage ? ViewBag.MaxPage : ViewBag.Page + 1;
+}
+
+@section PageNav
+{
+    @{/* page nav section */}
+    <div class="container" id="PageNavContainer">
+        <div class="row" id="PageNav">
+            <div class="col-lg-6 offset-lg-3 d-flex">
+                <ul class="pagination mx-auto">
+                    <li class="@PrevClass" id="PrevPage">
+                        @if (isGenre)
+                        {
+                            <a class="page-link" asp-controller="Filter" asp-action="Index" asp-route-genre="@ViewBag.Genre" asp-route-page="@PrevPage">
+                                &larr;
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="page-link" asp-controller="Filter" asp-action="Index" asp-route-module="@ViewBag.Module" asp-route-page="@PrevPage">
+                                &larr;
+                            </a>
+                        }
+                    </li>
+                    <li class="page-item disabled">
+                        <p class="page-link"> - </p>
+                    </li>
+                    <li class="page-item disabled">
+                        <b class="text-center page-link">@ViewBag.Page</b>
+                    </li>
+                    <li class="page-item disabled">
+                        <p class="page-link"> - </p>
+                    </li>
+                    <li class="@NextClass" id="NextPage">
+                        @if (isGenre)
+                        {
+                            <a class="page-link" asp-controller="Filter" asp-action="Index" asp-route-genre="@ViewBag.Genre" asp-route-page="@NextPage">
+                                &rarr;
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="page-link" asp-controller="Filter" asp-action="Index" asp-route-module="@ViewBag.Module" asp-route-page="@NextPage">
+                                &rarr;
+                            </a>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,148 @@
+﻿@{
+    var TextReplyTitle = "Reply to";
+    var TextPostTitle = "Post a new thread";
+
+    var TextTitlePlaceHolder = "Title";
+    var TextNickPlaceHolder = "Nick";
+    var TextContentPlaceHolder = "Write your sentences here...";
+    var TextImagePlaceHolder = "Choose a image?";
+
+    var TextPostBtn = "Post";
+    var TextReplyBtn = "Reply";
+    var TextCloseBtn = "Close";
+
+    var TextWarningOfLength = "The length of content text should be more than 6 and less than 1000!";
+}
+
+@model TewiBoard.Web.Models.CardModel;
+@{
+    string hash = Model.Hash;
+    string dropset = Model.ReplyId != null ? "true" : "false";
+    string btnStyle = Model.ReplyId != null ? "" : "height: 50px;";
+    string btnText = Model.ReplyId == null ? TextPostBtn : TextReplyBtn;
+}
+
+@{/* post button */}
+<button type="button" class="btn btn-outline-primary btn-light" data-toggle="modal" data-target="#PostModal-@hash" style="@btnStyle">
+    @btnText
+</button>
+@{/* post modal */}
+<div class="modal fade" id="PostModal-@hash" data-backdrop="@dropset">
+    @{/* modal content */}
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @{/* modal header */}
+            <div class="modal-header">
+                @{
+                    if (Model.ReplyId != null)
+                    {
+                        <h5 class="modal-title">
+                            @TextReplyTitle &nbsp;
+                            <span class="text-info text-monospace text-muted">No.@Model.ReplyId</span>
+                        </h5>
+                    }
+                    else
+                    {
+                        <h5 class="modal-title">
+                            @TextPostTitle
+                        </h5>
+                    }
+                }
+
+                <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                </button>
+            </div>
+
+            @{/* modal body */}
+            <div class="modal-body">
+                <div class="form-group">
+                    @{/* form body */}
+                    <form asp-controller="Card" asp-action="Post" method="post" enctype="multipart/form-data">
+                        <select class="form-control" name="module" disabled id="GenreNModule-@hash">
+                            @foreach (var genre in Genres.List)
+                            {
+                                <optgroup label="@genre">
+                                    @foreach (var module in Genres.Modules[genre])
+                                    {
+                                        <option value="@module" id="@hash-@module">@module</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                        <br />
+                        @if (Model.ReplyId == null)
+                        {
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        @TextTitlePlaceHolder
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" name="title" placeholder="@TextTitlePlaceHolder" />
+                            </div>
+
+                        }
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    @TextNickPlaceHolder
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" name="usernick" placeholder="@TextNickPlaceHolder" />
+                        </div>
+                        <input type="hidden" name="replyid" value="@Model.ReplyId" />
+                        <input type="hidden" name="replyTop" value="@Model.ReplyTop" />
+                        @{
+                            if (Model.ReplyId != null)
+                            {
+                                <input type="hidden" name="module" value="@Model.Module" />
+                            }
+                        }
+                        <br />
+                        <textarea class="form-control" rows="6" name="content" id="PostText-@hash" placeholder="@TextContentPlaceHolder"></textarea>
+                        <p class="text-danger" id="TextHint-@hash"></p>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" accept="image/*" name="image" id="ImageUpload-@hash" />
+                            <label class="custom-file-label" for="ImageUpload-@hash" id="ImageLabel-@hash">@TextImagePlaceHolder</label>
+                        </div>
+                        <hr />
+                        <input type="submit" class="btn btn-outline-danger" value="@btnText" disabled id="SubmitBtn-@hash" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            @TextCloseBtn
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    @{
+        if (Model.ReplyId != null)
+        {
+            @:$("#@Html.Raw(hash)-@Html.Raw(Model.Module)").attr("selected", "selected");
+        }
+        else
+        {
+            @:$("#GenreNModule-@Html.Raw(hash)").removeAttr("disabled");
+        }
+    }
+
+    $("#PostText-@Html.Raw(hash)").on('input change click', function () {
+        if ($("#PostText-@Html.Raw(hash)").val().length < 6) {
+            $("#TextHint-@Html.Raw(hash)").text("@Html.Raw(TextWarningOfLength)");
+        }
+        else {
+            $("#TextHint-@Html.Raw(hash)").text("");
+            $("#SubmitBtn-@Html.Raw(hash)").removeAttr("disabled");
+            $("#SubmitBtn-@Html.Raw(hash)").attr("class", "btn btn-outline-success");
+        }
+    })
+
+    $("#ImageUpload-@Html.Raw(hash)").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings("#ImageLabel-@Html.Raw(hash)").addClass("selected").html(fileName);
+    });
+</script>

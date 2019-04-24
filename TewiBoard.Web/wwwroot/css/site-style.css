@@ -1,0 +1,43 @@
+html,
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana,'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+    height: 100%;
+}
+
+.wrapper {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 50px;
+}
+
+#Header {
+    margin-bottom: 10px;
+}
+
+#HeaderContainer {
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin-bottom: 0px;
+}
+
+#TitleText {
+    font-family: Consolas, 'Courier New', Courier, monospace;
+}
+
+#Footer {
+  position: absolute;
+  bottom: 0px;
+  height: 50px;
+  width: 100%;
+}
+
+#FooterBlock {
+  margin-bottom: 0px;
+  padding: 10px;
+}
+
+#PostBtnRow {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+}

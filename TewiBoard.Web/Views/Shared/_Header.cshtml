@@ -1,0 +1,63 @@
+﻿@{
+    var TextTitle = "TewiBoard";
+    var TextNavBrand = "NavBar";
+    var TextTimeline = "Timeline";
+    var TextSearchPlaceHolder = "Search Thread...";
+}
+
+<div class="jumbotron" id="HeaderContainer">
+    <h2 id="TitleText">
+        <a class="text-muted" asp-controller="Home" asp-action="Index">@TextTitle</a>
+    </h2>
+</div>
+
+<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom">
+
+    <span class="navbar-brand navbar-text">@TextNavBrand</span>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#MainNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="MainNavbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Timeline" asp-action="Index">
+                    @TextTimeline
+                </a>
+            </li>
+            @{
+                /* genres */
+                foreach (var genre in TewiBoard.Web.Models.Genres.List)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                            @genre
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-controller="Filter" asp-action="Index" asp-route-genre="@genre"><b>@genre</b></a>
+                            @{
+                                /* modules */
+                                foreach (var module in TewiBoard.Web.Models.Genres.Modules[genre])
+                                {
+                                    <a class="dropdown-item" asp-controller="Filter" asp-action="Index" asp-route-module="@module">
+                                        @module
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0" method="get" asp-controller="Search" asp-action="Index">
+            <div class="input-group-prepend">
+                <input class="form-control mr-sm-2" type="search" placeholder="@TextSearchPlaceHolder" name="keyword" />
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</nav>

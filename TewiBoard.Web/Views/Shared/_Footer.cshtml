@@ -1,0 +1,26 @@
+﻿@{
+    var TextCopyRightBeforeIcon = "Copyright";
+    var TextCopyRightAfterIcon = "2019 DCTewi All Rights Reserved - dctewi@dctewi.com";
+    var TextPowrd = "Powered by TewiBoard";
+    string[] TextFooterContent =
+    {
+
+    };
+}
+
+<div class="jumbotron border-top text-center" id="FooterBlock">
+    <p class="text-secondary small">
+        @TextCopyRightBeforeIcon <i class="fa fa-copyright"></i> @TextCopyRightAfterIcon
+        <br />
+        @{
+            foreach (var content in TextFooterContent)
+            {
+                <span>@content</span><br />
+            }
+        }
+        <a href="https://github.com/DCTewi/TewiBoard" target="_blank">
+            @TextPowrd <i class="fa fa-code"></i> <br />
+        </a>
+        <i class="fa fa-connectdevelop"></i>
+    </p>
+</div>

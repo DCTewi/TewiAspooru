@@ -1,0 +1,135 @@
+﻿@{
+    var TextIdPrefix = "ID";
+    var TextPidPrefix = "No.";
+    var TextReportBtn = "Report";
+
+    var TextReportTitle = "Report this post";
+    var TextReportBody = "Are you sure to report this post?";
+
+    var TextYes = "Yes";
+    var TextNo = "No";
+}
+
+@model TewiBoard.Web.Models.CardModel;
+@{
+    string hash = this.GetHashCode().ToString();
+    string extraRed = Model.IsRed == 1 ? "text-danger" : "text-info";
+    string nameRed = Model.IsRed == 1 ? "text-danger" : "text-success";
+}
+
+<div class="card" id="Post-@hash">
+    <div class="card-header small">
+        <b class="text-secondary">@Model.Title</b> -
+        <b class="@nameRed">@Model.UserNick</b>&nbsp;
+        <span>@Model.PostTime.ToString()</span>&nbsp;
+        <span class="@extraRed">@TextIdPrefix:@Model.UserId</span>&nbsp;
+        <span class="badge badge-pill badge-secondary">@Model.Module</span>
+        <span class="float-right"><a class="text-monospace text-muted" asp-controller="Card" asp-action="Index" asp-route-pid="@Model.Pid">@TextPidPrefix@Model.Pid</a></span>
+    </div>
+
+    <div class="card-body">
+        <div class="text-body" style="white-space: pre-line;">
+            @{
+                if (ViewBag.Full == 1)
+                {
+                    @Model.Content
+                }
+                else
+                {
+                    if (Model.Content.Length > 255)
+                    {
+                        @Model.Content.Substring(0, 255)@:<a href="/Card?pid=@Model.Pid">···</a>
+                    }
+                    else
+                    {
+                        @Model.Content
+                    }
+                }
+        }
+    </div>
+
+    @{
+        if (!String.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <a href="@Model.ImageUrl" target="_blank">
+                <img class="img-thumbnail" src="@Model.ImageUrl" alt="img-@Model.Pid" style="max-height:600px;" />
+            </a>
+        }
+    }
+
+    @{
+        if (Model.ReplyId != null)
+        {
+            <hr style="margin-bottom: 2px;" />
+            <div>
+                <p class="small text-muted">&gt;&gt;&gt; <a href="/Card?pid=@Model.ReplyId">No.@Model.ReplyId</a></p>
+                <p class="alert alert-secondary">
+                    @ViewBag.PrevText[Model.ReplyId.Value]
+                </p>
+            </div>
+
+            if (Model.ReplyTop != Model.ReplyId)
+            {
+                <div>
+                    <p class="small text-muted">Top: &gt;&gt;&gt; <a href="/Card?pid=@Model.ReplyTop">No.@Model.ReplyTop</a></p>
+                    <p class="alert alert-secondary">
+                        @ViewBag.PrevText[Model.ReplyTop.Value]
+                    </p>
+                </div>
+            }
+        }
+    }
+
+    <hr style="margin-bottom: 10px;margin-top: 2px;" />
+
+    @await Html.PartialAsync("_Post", new CardModel
+    {
+        Hash = hash,
+
+        ReplyId = Model.Pid,
+        ReplyTop = Model.ReplyTop,
+
+        Title = Model.Title,
+
+        Genre = Model.Genre,
+        Module = Model.Module
+    })
+
+    <a href="#" class="btn btn-outline-danger btn-light float-right" data-toggle="modal"
+       data-target="#ReportModal-@hash">@TextReportBtn</a>
+    <div class="modal fade" id="ReportModal-@hash">
+        @{/* modal content */}
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                @{/* modal header */}
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @TextReportTitle
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                </div>
+
+                @{/* modal body */}
+                <div class="modal-body">
+                    <h5 class="text-muted text-center">
+                        @TextReportBody
+                    </h5>
+                </div>
+
+                @{/* modal footer */}
+                <div class="modal-footer mx-auto">
+                    <form id="ReportForm-@hash" asp-controller="Home" asp-action="Report" method="post">
+                        <input type="hidden" value="@Model.Pid" name="pid" />
+                        <input type="submit" class="btn btn-outline-danger" value="@TextYes" />
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        @TextNo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

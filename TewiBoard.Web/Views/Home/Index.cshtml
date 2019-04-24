@@ -1,0 +1,44 @@
+﻿@{
+    var TextHomePageTitle = "Home Page";
+    var TextHomePageContentTitle = "Welcome to Tewiboard!";
+
+    string[] TextHomePageContent =
+    {
+        "Welcome",
+        "This is a imageboard site.",
+        "==================================",
+        "TewiBoard is an imageboard template.",
+        "If you see this page, you configured the database information correctly and it just works!",
+        "==================================",
+        "You can localize the template by editing files: ",
+        "The all text of views are separated to the top of every Views.cs. You can edit them easily by editing strings at ~/Views/*/*.cshtml 's head part",
+        "And the Genres and Modules are handled by ~/Models/Genres.cs. You can edit it directly.",
+        "==================================",
+        "For any questions, you can issue it on Github.",
+        "Have fun!"
+    };
+}
+
+@{
+    ViewBag.Title = TextHomePageTitle;
+}
+
+<h1> @TextHomePageTitle </h1>
+
+<hr />
+
+<div class="card" id="MainCard">
+    <div class="card-header">
+        <b>@TextHomePageContentTitle</b>
+    </div>
+    <div class="card-body">
+        @{
+            foreach (var content in TextHomePageContent)
+            {
+                <p>
+                    @Html.Raw(content)
+                </p>
+            }
+        }
+    </div>
+</div>

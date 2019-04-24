@@ -1,0 +1,11 @@
+# Useless Folders
+.vs/
+.vscode/
+TewiBoard.Schema/
+TewiBoard.Web/bin/
+TewiBoard.Web/obj/
+TewiBoard.Web/Properties/
+
+# Useless Files
+TewiBoard.Web.csproj.user
+appsettings.Development.json
