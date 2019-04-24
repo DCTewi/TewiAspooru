@@ -10,15 +10,15 @@ A imageboard template by ASP.NET Core.
 
 ## Previews
 
-![](.\TewiBoard.Previews\HomePage.png)
+![](./TewiBoard.Previews/HomePage.png)
 
-![](.\TewiBoard.Previews\Timeline.png)
+![](./TewiBoard.Previews/Timeline.png)
 
-![](.\TewiBoard.Previews\Search.png)
+![](./TewiBoard.Previews/Search.png)
 
-![](.\TewiBoard.Previews\Post.png)
+![](./TewiBoard.Previews/Post.png)
 
-![](.\TewiBoard.Previews\Reply.png)
+![](./TewiBoard.Previews/Reply.png)
 
 ## Features
 
